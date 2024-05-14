@@ -16,8 +16,9 @@ jobs:
         run: |
           git rev-list --count master
           git branch
-        #   commit_count=$(git rev-list --count master)
           echo "Total commits on 'test' branch: $commit_count :::${git rev-list --count master}"
+
+        #   commit_count=$(git rev-list --count master)
         #   echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
 
     #   - name: Get current date
