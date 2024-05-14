@@ -14,7 +14,7 @@ jobs:
       - name: Count all commits on test branch
         id: commit_count
         run: |
-          commit_count=$(git rev-list --count test)
+          commit_count=$(git rev-list --count master)
           echo "Total commits on 'test' branch: $commit_count"
           echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
 
