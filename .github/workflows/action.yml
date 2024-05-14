@@ -16,6 +16,7 @@ jobs:
       - name: Count all commits on test branch
         id: commit_count
         run: |
+            git branch
             echo "checking count"
             $count = git log --oneline | wc -l
             echo "${count}"
