@@ -22,7 +22,7 @@ jobs:
         run: |
             git branch
             echo "checking count"
-            $count = git log --oneline | wc -l
+            count=$(git log --oneline | wc -l)
             echo "${count}"
         #   echo "Total commits on 'test' branch: $commit_count"
         #   echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
