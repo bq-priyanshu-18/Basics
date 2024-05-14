@@ -1,0 +1,31 @@
+name: Tests
+on:
+    push:
+      branches:
+        - 'test'
+jobs:
+  generate_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+
+      - name: Get last commit date
+        id: last_commit_date
+        run: echo "::set-output name=last_commit_date::$(git log -1 --format=%cd --date=format:%Y-%m-%d)"
+
+      - name: Calculate day difference
+        id: day_diff
+        run: echo "::set-output name=day_diff::$(echo "$(date -d "${{ steps.date.outputs.date }}") - $(date -d "${{ steps.last_commit_date.outputs.last_commit_date }}")" | bc)"
+
+      - name: Set version number
+        id: set_version
+        run: echo "::set-output name=version::V${{ steps.major_version.outputs.major_version }}.${{ steps.date.outputs.date }}.$(( ${{ steps.day_diff.outputs.day_diff }} + ${{ github.run_number }} ))"
+
+      - name: Print version number
+        run: echo "Generated version number: ${{ steps.set_version.outputs.version }}"
+
