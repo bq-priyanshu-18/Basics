@@ -14,25 +14,27 @@ jobs:
       - name: Count all commits on test branch
         id: commit_count
         run: |
-          commit_count=$(git rev-list --count master)
-          echo "Total commits on 'test' branch: $commit_count"
-          echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
+          git rev-list --count master
+          git branch
+        #   commit_count=$(git rev-list --count master)
+          echo "Total commits on 'test' branch: $commit_count :::${git rev-list --count master}"
+        #   echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
 
-      - name: Get current date
-        id: date
-        run: echo "DATE=$(date +%Y-%m-%d)" >> $GITHUB_ENV
+    #   - name: Get current date
+    #     id: date
+    #     run: echo "DATE=$(date +%Y-%m-%d)" >> $GITHUB_ENV
 
-      - name: Set version number
-        id: set_version
-        run: |
-          source $GITHUB_ENV
-          echo "Generated version number: V1.0.${DATE}.${COMMIT_COUNT}"
-          echo "VERSION=V1.0.${DATE}.${COMMIT_COUNT}" >> $GITHUB_ENV
+    #   - name: Set version number
+    #     id: set_version
+    #     run: |
+    #       source $GITHUB_ENV
+    #       echo "Generated version number: V1.0.${DATE}.${COMMIT_COUNT}"
+    #       echo "VERSION=V1.0.${DATE}.${COMMIT_COUNT}" >> $GITHUB_ENV
 
-      - name: Print version number
-        run: |
-          source $GITHUB_ENV
-          echo "Generated version number: $VERSION"
+    #   - name: Print version number
+    #     run: |
+    #       source $GITHUB_ENV
+    #       echo "Generated version number: $VERSION"
 
 # name: Generate Version Number
 # on:
