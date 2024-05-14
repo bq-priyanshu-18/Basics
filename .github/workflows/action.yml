@@ -1,8 +1,9 @@
-name: Tests
+name: Generate Version Number
 on:
-    push:
-      branches:
-        - 'test'
+  push:
+    branches:
+      - test
+
 jobs:
   generate_version:
     runs-on: ubuntu-latest
@@ -14,22 +15,22 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
 
-      - name: Get last commit date
-        id: last_commit_date
-        run: echo "::set-output name=last_commit_date::$(git log -1 --format=%cd --date=format:%Y-%m-%d)"
-
-      - name: Calculate day difference
-        id: day_diff
-        run: echo "::set-output name=day_diff::$(echo "$(date -d "${{ steps.date.outputs.date }}") - $(date -d "${{ steps.last_commit_date.outputs.last_commit_date }}")" | bc)"
+      - name: Count commits for today
+        id: commit_count
+        run: |
+          today=$(date +%Y-%m-%d)
+          commit_count=$(git log --since="${today}T00:00:00Z" --until="${today}T23:59:59Z" --format=oneline | wc -l)
+          echo "::set-output name=commit_count::${commit_count}"
 
       - name: Set version number
         id: set_version
         run: |
-          echo "Major version: ${{ steps.major_version.outputs.major_version }}"
-          echo "Current date: ${{ steps.date.outputs.date }}"
-          day_diff=$(( ${{ steps.day_diff.outputs.day_diff }} + ${{ github.run_number }} ))
-          echo "Generated version number: V${{ steps.major_version.outputs.major_version }}.${{ steps.date.outputs.date }}.${day_diff}"
+          major_version=$(<path/to/major/version/file)
+          today=$(date +%Y-%m-%d)
+          commit_count=${{ steps.commit_count.outputs.commit_count }}
+          echo "Generated version number: V${major_version}.${today}.${commit_count}"
+          echo "::set-output name=version::V${major_version}.${today}.${commit_count}"
 
       - name: Print version number
         run: |
-            echo "Generated version number: ${{ steps.set_version.outputs.version }}"
+          echo "Generated version number: ${{ steps.set_version.outputs.version }}"
