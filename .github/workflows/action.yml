@@ -24,8 +24,12 @@ jobs:
 
       - name: Set version number
         id: set_version
-        run: echo "::set-output name=version::V${{ steps.major_version.outputs.major_version }}.${{ steps.date.outputs.date }}.$(( ${{ steps.day_diff.outputs.day_diff }} + ${{ github.run_number }} ))"
+        run: |
+          echo "Major version: ${{ steps.major_version.outputs.major_version }}"
+          echo "Current date: ${{ steps.date.outputs.date }}"
+          day_diff=$(( ${{ steps.day_diff.outputs.day_diff }} + ${{ github.run_number }} ))
+          echo "Generated version number: V${{ steps.major_version.outputs.major_version }}.${{ steps.date.outputs.date }}.${day_diff}"
 
       - name: Print version number
-        run: echo "Generated version number: ${{ steps.set_version.outputs.version }}"
-
+        run: |
+            echo "Generated version number: ${{ steps.set_version.outputs.version }}"
