@@ -15,7 +15,10 @@ jobs:
         id: commit_count
         run: |
           commit_count=$(git rev-list --count test)
+          echo "::generale comadnit  :  :: name=commit_count::${commit_count}"
           echo "::set-output name=commit_count::${commit_count}"
+
+
 
       - name: Get major version from package.json
         id: major_version
