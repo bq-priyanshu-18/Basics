@@ -12,13 +12,13 @@ jobs:
         uses: actions/checkout@v2
         with:
             fetch-depth: 0
-            
+
       - name: Count all commits on test branch
         id: commit_count
         run: |
             echo "checking count"
             $count = git log --oneline | wc -l
-            echo "$count"
+            echo "${count}"
         #   echo "Total commits on 'test' branch: $commit_count"
         #   echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
 
