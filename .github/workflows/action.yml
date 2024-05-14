@@ -8,10 +8,7 @@ jobs:
   generate_version:
     runs-on: ubuntu-latest
     steps:
-    #   - name: 'PR commits + 1'
-    #     run: echo "PR_FETCH_DEPTH=$(( ${{ github.event.pull_request.commits }} + 1 ))" >> "${GITHUB_ENV}"
-      
-      - name: 'Checkout PR branch and all PR commits'
+     - name: 'Checkout PR branch and all PR commits'
         uses: actions/checkout@v4
         with:
           ref: "master"
@@ -20,61 +17,22 @@ jobs:
       - name: Count all commits on test branch
         id: commit_count
         run: |
-            git branch
-            echo "checking count"
-            count=$(git log --oneline | wc -l)
-            echo "${count}"
-        #   echo "Total commits on 'test' branch: $commit_count"
-        #   echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
+          commit_count=$(git rev-list --count test)
+          echo "Total commits on 'master' branch: $commit_count"
+          echo "::set-output name=commit_count::$commit_count"
 
-    #   - name: Get current date
-    #     id: date
-    #     run: echo "DATE=$(date +%Y-%m-%d)" >> $GITHUB_ENV
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
 
-    #   - name: Set version number
-    #     id: set_version
-    #     run: |
-    #       source $GITHUB_ENV
-    #       echo "Generated version number: V1.0.${DATE}.${COMMIT_COUNT}"
-    #       echo "VERSION=V1.0.${DATE}.${COMMIT_COUNT}" >> $GITHUB_ENV
+      - name: Set version number
+        id: set_version
+        run: |
+          today=$(date +%Y-%m-%d)
+          commit_count=${{ steps.commit_count.outputs.commit_count }}
+          echo "Generated version number: V1.0.${today}.${commit_count}"
+          echo "::set-output name=version::V1.0.${today}.${commit_count}"
 
-    #   - name: Print version number
-    #     run: |
-    #       source $GITHUB_ENV
-    #       echo "Generated version number: $VERSION"
-
-# name: Generate Version Number
-# on:
-#   push:
-#     branches:
-#       - test
-
-# jobs:
-#   generate_version:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-
-#       - name: Count all commits on test branch
-#         id: commit_count
-#         run: |
-#           commit_count=$(git rev-list --count test)
-#           echo "Total commits on 'test' branch: $commit_count"
-#           echo "::set-output name=commit_count::$commit_count"
-
-#       - name: Get current date
-#         id: date
-#         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
-
-#       - name: Set version number
-#         id: set_version
-#         run: |
-#           today=$(date +%Y-%m-%d)
-#           commit_count=${{ steps.commit_count.outputs.commit_count }}
-#           echo "Generated version number: V1.0.${today}.${commit_count}"
-#           echo "::set-output name=version::V1.0.${today}.${commit_count}"
-
-#       - name: Print version number
-#         run: |
-#           echo "Generated version number: ${{ steps.set_version.outputs.version }}"
+      - name: Print version number
+        run: |
+          echo "Generated version number: ${{ steps.set_version.outputs.version }}"
