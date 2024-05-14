@@ -22,10 +22,14 @@ jobs:
           commit_count=$(git log --since="${today}T00:00:00Z" --until="${today}T23:59:59Z" --format=oneline | wc -l)
           echo "::set-output name=commit_count::${commit_count}"
 
+      - name: Get major version from package.json
+        id: major_version
+        run: echo "::set-output name=major_version::$(jq -r '.version' package.json)"
+
       - name: Set version number
         id: set_version
         run: |
-          major_version=$(../../package.json)
+          major_version=${{ steps.major_version.outputs.major_version }}
           today=$(date +%Y-%m-%d)
           commit_count=${{ steps.commit_count.outputs.commit_count }}
           echo "Generated version number: V${major_version}.${today}.${commit_count}"
