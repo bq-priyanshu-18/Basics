@@ -14,8 +14,8 @@ jobs:
       - name: Count all commits on test branch
         id: commit_count
         run: |
-          commit_count=$(git branch)
-          echo "Total commits on 'test' branch: $commit_count"
+          git branch
+        #   echo "Total commits on 'test' branch: $commit_count"
         #   echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
 
     #   - name: Get current date
