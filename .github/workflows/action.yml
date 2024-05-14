@@ -8,11 +8,11 @@ jobs:
   generate_version:
     runs-on: ubuntu-latest
     steps:
-     - name: 'Checkout PR branch and all PR commits'
+      - name: 'Checkout PR branch and all PR commits'
         uses: actions/checkout@v4
         with:
-          ref: "master"
-          fetch-depth: 0
+            ref: "master"
+            fetch-depth: 0
 
       - name: Count all commits on test branch
         id: commit_count
