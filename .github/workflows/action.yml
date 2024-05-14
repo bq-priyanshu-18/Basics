@@ -1,0 +1,43 @@
+name: Generate Version Number
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  generate_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Count all commits on test branch
+        id: commit_count
+        run: |
+          commit_count=$(git rev-list --count test)
+          echo "::generale comadnit  :  :: name=commit_count::${commit_count}"
+          echo "::set-output name=commit_count::${commit_count}"
+
+
+
+      - name: Get major version from package.json
+        id: major_version
+        run: echo "::set-output name=major_version::$(jq -r '.version' package.json)"
+        
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+
+      - name: Set version number
+        id: set_version
+        run: |
+          major_version=${{ steps.major_version.outputs.major_version }}
+          today=$(date +%Y-%m-%d)
+          commit_count=${{ steps.commit_count.outputs.commit_count }}
+          echo "Generated version number: V${major_version}.${today}.${commit_count}"
+          echo "::set-output name=version::V${major_version}.${today}.${commit_count}"
+
+
+      - name: Print version number
+        run: |
+          echo "Generated version number: ${{ steps.set_version.outputs.version }}"
