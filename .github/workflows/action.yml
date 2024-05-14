@@ -25,7 +25,7 @@ jobs:
       - name: Set version number
         id: set_version
         run: |
-          major_version=$(<path/to/major/version/file)
+          major_version=$(../../package.json)
           today=$(date +%Y-%m-%d)
           commit_count=${{ steps.commit_count.outputs.commit_count }}
           echo "Generated version number: V${major_version}.${today}.${commit_count}"
