@@ -19,7 +19,7 @@ jobs:
       - name: Count commits on master branch for the specified date
         id: commit_count
         run: |
-          date_to_check="${{ github.event.inputs.date }}"
+          date_to_check=$(date +'%Y-%m-%d')
           commit_count=$(git log --oneline --since="${date_to_check} 00:00" --until="${date_to_check} 23:59" | wc -l)
           echo "Total commits on 'master' branch for ${date_to_check}: $commit_count"
           echo "::set-output name=commit_count::$commit_count"
