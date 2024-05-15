@@ -40,8 +40,8 @@ jobs:
           today=$(date +%Y-%m-%d)
           commit_count=${{ steps.commit_count.outputs.commit_count }}
           major_version=${{ steps.major_version.outputs.major_version }}
-          echo "Generated version number: ${major_version}.${today}.${commit_count}"
-          echo "::set-output name=version::${major_version}.${today}.${commit_count}"
+          echo "Generated version number: V${major_version}.${today}.${commit_count}"
+          echo "::set-output name=version::V${major_version}.${today}.${commit_count}"
 
       - name: Print version number
         run: |
