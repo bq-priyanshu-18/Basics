@@ -16,17 +16,15 @@ jobs:
             ref: "master"
             fetch-depth: 0
 
-      - name: Count all commits on test branch
-        id: commit_count
-        run: |
-          commit_count=$(git log --oneline | wc -l)
-          echo "Total commits on 'master' branch: $commit_count"
-          echo "::set-output name=commit_count::$commit_count"
-          #   commit_count=$(git rev-list --count test)
-
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+      - name: Count commits on master branch for the specified date
+        id: commit_count
+        run: |
+          commit_count=$(git log --oneline --since="${today} 00:00" --until="${today} 23:59" | wc -l)
+          echo "Total commits on 'master' branch for ${today}: $commit_count"
+          echo "::set-output name=commit_count::$commit_count"
 
       - name: Set version number
         id: set_version
