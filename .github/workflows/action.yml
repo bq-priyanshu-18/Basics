@@ -19,9 +19,17 @@ jobs:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+
+      - name: Get major version from package.json
+        id: major_version
+        run: |
+          major_version=$(jq -r '.version' package.json)
+          echo "::set-output name=major_version::$major_version"
+        
       - name: Count commits on master branch for the specified date
         id: commit_count
         run: |
+          today=$(date +%Y-%m-%d)
           commit_count=$(git log --oneline --since="${today} 00:00" --until="${today} 23:59" | wc -l)
           echo "Total commits on 'master' branch for ${today}: $commit_count"
           echo "::set-output name=commit_count::$commit_count"
@@ -31,8 +39,9 @@ jobs:
         run: |
           today=$(date +%Y-%m-%d)
           commit_count=${{ steps.commit_count.outputs.commit_count }}
-          echo "Generated version number: V1.0.${today}.${commit_count}"
-          echo "::set-output name=version::V1.0.${today}.${commit_count}"
+          major_version=${{ steps.major_version.outputs.major_version }}
+          echo "Generated version number: V${major_version}.${today}.${commit_count}"
+          echo "::set-output name=version::V${major_version}.${today}.${commit_count}"
 
       - name: Print version number
         run: |
