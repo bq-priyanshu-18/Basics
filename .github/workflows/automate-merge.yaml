@@ -1,20 +1,23 @@
-name: backend_deploy
+name: Update Version
 
 on:
- push:
-   branches:
-     - 'v[0-9]+.[0-9]+.[0-9]+(-rc[0-9]+)?'
-   tags:
-     - 'v[0-9]+\.[0-9]+\.[0-9]+-rc[0-9]+'
+  push:
+    branches:
+      - main
+# on:
+#   pull_request:
+#     branches:
+#       - main
 
- pull_request:
-   branches:
-     - 'v[0-9]+.[0-9]+.[0-9]+(-rc[0-9]+)?'
+env:
+  CURRENT_BRANCH: ${{ github.ref }}
+  MY_BRANCH: ${{ github.head_ref }}
 
- workflow_dispatch:
 jobs:
-  bump_release_version:
+  getLatestTag:
     runs-on: ubuntu-latest
+    outputs:
+      DD_VERSION: ${{ steps.get_latest_tag.outputs.LATEST_VERSION }}
     permissions:
      actions: write
      contents: write
@@ -25,56 +28,140 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
+      - name: GitHub Tag Name example
+        run: |
+         echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+         echo "Tag name from github.ref_name: ${{  github.ref_name }}"
       - name: Get the latest tag
         id: get_latest_tag
         run: |
-          LATEST_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` | sed 's/-.*$//' | sed 's/v//')
-          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
-          echo $LATEST_VERSION
+          echo "LATEST_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` | sed 's/-.*$//' | sed 's/v//')" >> "$GITHUB_OUTPUT"
+          export DD_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` | sed 's/-.*$//' | sed 's/v//')
+          echo "This is exported variable $DD_VERSION"
 
-      - name: Create temporary branch
-        run: |
-          CURRENT_BRANCH_NAME=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "CURRENT_BRANCH_NAME=$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
-          echo "Current branch is: $CURRENT_BRANCH_NAME"
-          git branch
-          git checkout -b release/$CURRENT_BRANCH_NAME
-          git branch
+      # - name: Print DD_VERSION
+      #   run: |
+      #    echo $DD_VERSION
 
-      - name: Commit and push changes
-        run: |
-          git config --global user.name 'bq-priyanshu-18'
-          git config --global user.email 'priyanshu.namdev@betaque.com'
+  # job2:
+  #   runs-on: ubuntu-latest
+  #   needs: getLatestTag
+  #   steps:
+  #       - run: |-
+  #           export DD_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` | sed 's/-.*$//' | sed 's/v//')
+  #           echo $DD_VERSION
 
-          if git diff --quiet; then
-            echo "No changes detected. Skipping commit."
-            exit 0
-          fi
+  # build-and-publish:
+  #       needs: getLatestTag
+  #       runs-on: ubuntu-latest
+  #       steps:
+  #       - uses: actions/checkout@v3
+  #       - name: Use DD_VERSION
+  #         run: |
+  #           echo "The latest version is: ${{ steps.get_latest_tag.outputs.DD_VERSION }}"
+  #           echo $DD_VERSION
 
-          git add package.json
-          git commit -m "Bump version to $LATEST_VERSION"
+# Commenting
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '14'
 
-          if [ $(git ls-remote --heads origin $CURRENT_BRANCH_NAME | wc -l) -eq 1 ]; then
-            echo "Branch $CURRENT_BRANCH_NAME already exists. Skipping push."
-          else
-            git push --set-upstream origin $CURRENT_BRANCH_NAME
-          fi
-         
-      - name: Create Pull Request
-        id: cpr-check
-        run: |
-          PR_EXISTS=$(gh pr list --state open --head $CURRENT_BRANCH_NAME --json id --limit 1 | jq '.[] | .id' | tr -d '"')
-          if [ -n "$PR_EXISTS" ]; then
-            echo "PR already exists with the same branch. Skipping creation."
-          else
-            echo "No PR exists with the same branch. Creating a new one."
-            gh pr create --title "Bump version to $LATEST_VERSION" --body "Updating the release version to $LATEST_VERSION" --base main --head $CURRENT_BRANCH_NAME
-          fi
-        env:
-          GH_TOKEN: ${{ github.token }}
+      # - name: Get the latest tag
+      #   id: get_latest_tag
+      #   run: |
+      #     LATEST_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` | sed 's/-.*$//' | sed 's/v//')
+      #     echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+      #     echo $LATEST_VERSION
+
+      # - name: Read current version from package.json
+      #   id: read_version
+      #   run: |
+      #     CURRENT_VERSION=$(jq -r '.version' package.json)
+      #     echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+      #     echo $CURRENT_VERSION
+      #   working-directory: ${{ github.workspace }}/application
+
+      # - name: Check if version needs update
+      #   id: check_update
+      #   run: |
+      #     if [ "$LATEST_VERSION" == "$CURRENT_VERSION" ]; then
+      #       echo "Version is up to date"
+      #       echo "needs_update=false" >> $GITHUB_ENV
+      #     else
+      #       echo "Updating version to $LATEST_VERSION"
+      #       echo "needs_update=true" >> $GITHUB_ENV
+      #     fi  
+
+      # - name: Create temporary branch
+      #   if: env.needs_update == 'true'
+      #   run: |
+      #     CURRENT_BRANCH_NAME=$(git describe --tags `git rev-list --tags --max-count=1`)
+      #     echo "CURRENT_BRANCH_NAME=$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
+      #     echo "Current branch name/tag: $CURRENT_BRANCH_NAME"
+          
+      #     git branch
+      #     git checkout -b release/$CURRENT_BRANCH_NAME
+      #     git branch
+
+      # - name: Checkout to temporary branch
+      #   if: env.needs_update == 'true'
+      #   run: |
+      #     git checkout -b {{ steps.create-temporary-branch.outputs.current-branch-name }}
+      #     git branch
+          
+# Commenting
+      # - name: Update package.json version
+      #   if: env.needs_update == 'true'
+      #   run: |
+      #     npm version $LATEST_VERSION
+      #   working-directory: ${{ github.workspace }}/application
+
+      # - name: Commit and push changes
+      #   if: env.needs_update == 'true'
+      #   run: |
+      #     git config --global user.name 'bq-satyam-08'
+      #     git config --global user.email 'satyam.nalawade@betaque.com'
+      #     git add package.json
+      #     git commit -m "bump version to $LATEST_VERSION"
+      #     git branch
+
+      #     if [ $(git ls-remote --heads origin release/$CURRENT_BRANCH_NAME | wc -l) -eq 1 ]; then
+      #       echo "Branch already exists. Skipping push."
+      #     else
+      #       git push --set-upstream origin release/$CURRENT_BRANCH_NAME
+      #     fi
+          
+      #     # git push --set-upstream origin release/$CURRENT_BRANCH_NAME
+      #     echo $CURRENT_BRANCH_NAME
+      #     echo "CURRENT_BRANCH_NAME=release/$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
+      #     echo "Current Branch: $CURRENT_BRANCH_NAME"
+      #     echo "My Branch: $MY_BRANCH"
+
+          
+        # working-directory: ${{ github.workspace }}/application
+
+      # - name: Create Pull Request
+      #   if: env.needs_update == 'true'
+      #   uses: peter-evans/create-pull-request@v6
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: main
+      #     delete-branch: false
+      #     title: 'Update version to latest tag'
+      #     body: 'This PR updates the version in package.json to the latest tag.'
+      #     labels: 'automated PR'
+
+#Commenting
+      # - name: Create Pull Request
+      #   id: cpr-check
+      #   run: |
+      #     PR_EXISTS=$(gh pr list --state open --head $CURRENT_BRANCH_NAME --json id --limit 1 | jq '.[] | .id' | tr -d '"')
+      #     if [ -n "$PR_EXISTS" ]; then
+      #       echo "PR already exists with the same branch. Skipping creation."
+      #     else
+      #       echo "No PR exists with the same branch. Creating a new one."
+      #       gh pr create --title "Bump version to $LATEST_VERSION" --body "Updating the release version to $LATEST_VERSION" --base main --head $CURRENT_BRANCH_NAME
+      #     fi
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
