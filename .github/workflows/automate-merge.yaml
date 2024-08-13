@@ -2,14 +2,8 @@ name: backend_deploy
 
 on:
   push:
-    branches:
-      - 'main'
     tags:
       - '**'  # Triggers on any tag push
-
-  pull_request:
-    branches:
-      - 'main'
 
   workflow_dispatch:
 
@@ -35,18 +29,16 @@ jobs:
       - name: Get the latest tag
         id: get_latest_tag
         run: |
-          LATEST_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` | sed 's/-.*$//' | sed 's/v//')
-          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
-          echo $LATEST_VERSION
+          TAG_NAME=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          echo $TAG_NAME
 
       - name: Create and switch to a new branch
         run: |
-          TAG_NAME=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
-          echo "Current tag is: $TAG_NAME"
           BRANCH_NAME="release/${TAG_NAME}"
           git checkout -b $BRANCH_NAME
-          git branch
+          git push --set-upstream origin $BRANCH_NAME
+          echo "Branch created and pushed: $BRANCH_NAME"
 
       - name: Commit and push changes
         run: |
@@ -58,10 +50,9 @@ jobs:
             exit 0
           fi
 
-          git add package.json
-          git commit -m "Bump version to $LATEST_VERSION"
-
-          git push --set-upstream origin $BRANCH_NAME
+          git add .
+          git commit -m "Bump version to $TAG_NAME"
+          git push
 
       - name: Create Pull Request
         id: cpr-check
@@ -72,7 +63,7 @@ jobs:
             echo "PR already exists with the same branch. Skipping creation."
           else
             echo "No PR exists with the same branch. Creating a new one."
-            gh pr create --title "Bump version to $LATEST_VERSION" --body "Updating the release version to $LATEST_VERSION" --base main --head $BRANCH_NAME
+            gh pr create --title "Bump version to $TAG_NAME" --body "Updating the release version to $TAG_NAME" --base main --head $BRANCH_NAME
           fi
         env:
           GH_TOKEN: ${{ github.token }}
