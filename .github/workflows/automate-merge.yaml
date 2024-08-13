@@ -120,4 +120,4 @@ jobs:
             gh pr create --title "Bump version to $LATEST_VERSION" --body "Updating the release version to $LATEST_VERSION" --base main --head $CURRENT_BRANCH_NAME
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
