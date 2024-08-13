@@ -50,7 +50,7 @@ jobs:
           title: 'Daily Translation Update'
           body: 'This PR updates the translation files.'
           add-paths: |
-            src/shared/lib/localization/locales/*
+            ./scripts/*
 
       # - uses: peter-evans/enable-pull-request-automerge@v3
       #   with:
