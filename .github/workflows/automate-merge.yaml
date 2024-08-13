@@ -79,7 +79,9 @@ jobs:
           echo "CURRENT_BRANCH_NAME=release/$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
           echo "Current Branch: $CURRENT_BRANCH_NAME"
           echo "My Branch: $MY_BRANCH"
-
+      - name: Set CURRENT_BRANCH_NAME
+        run: echo "CURRENT_BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+        
       - name: Create Pull Request
         id: cpr-check
         run: |
