@@ -50,8 +50,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name 'Clovis Warlop'
-          git config --global user.email 'clovis@warlop.be'
+          git config --global user.name 'bq-priyanshu-18'
+          git config --global user.email 'priyanshu.namdev@betaque.com'
           git add package.json
           git commit -m "bump version to $LATEST_VERSION"
           git branch
