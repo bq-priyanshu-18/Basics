@@ -59,6 +59,16 @@ jobs:
           npm version $LATEST_VERSION
         working-directory: ${{ github.workspace }}/application
 
+
+      - name: Create temporary branch
+        run: |
+          CURRENT_BRANCH_NAME=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "CURRENT_BRANCH_NAME=$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
+          echo "Current branch is: $CURRENT_BRANCH_NAME"
+          git branch
+          git checkout -b release/$CURRENT_BRANCH_NAME
+          git branch        
+
       - name: Commit and push changes
         if: env.needs_update == 'true'
         run: |
@@ -81,7 +91,7 @@ jobs:
           echo "My Branch: $MY_BRANCH"
       - name: Set CURRENT_BRANCH_NAME
         run: echo "CURRENT_BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
-        
+
       - name: Create Pull Request
         id: cpr-check
         run: |
