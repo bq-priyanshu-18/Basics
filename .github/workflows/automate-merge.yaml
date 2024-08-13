@@ -1,0 +1,81 @@
+name: backend_deploy
+
+on:
+  push:
+    branches:
+      - 'feat/automate-pr-marge'
+    tags:
+      - 'feat/automate-pr-marge'
+
+  pull_request:
+    branches:
+      - 'feat/automate-pr-marge'
+
+  workflow_dispatch:
+
+jobs:
+  bump_release_version:
+    runs-on: ubuntu-latest
+    permissions:
+     actions: write
+     contents: write
+     pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Get the latest tag
+        id: get_latest_tag
+        run: |
+          LATEST_VERSION=$(git describe --tags `git rev-list --tags --max-count=1` | sed 's/-.*$//' | sed 's/v//')
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+          echo $LATEST_VERSION
+
+      - name: Create temporary branch
+        run: |
+          CURRENT_BRANCH_NAME=test-1
+          echo "CURRENT_BRANCH_NAME=$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
+          echo "Current branch is: $CURRENT_BRANCH_NAME"
+          git branch
+          git checkout -b release/$CURRENT_BRANCH_NAME
+          git branch
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'Clovis Warlop'
+          git config --global user.email 'clovis@warlop.be'
+          git add package.json
+          git commit -m "bump version to $LATEST_VERSION"
+          git branch
+
+          if [ $(git ls-remote --heads origin release/$CURRENT_BRANCH_NAME | wc -l) -eq 1 ]; then
+            echo "Branch already exists. Skipping push."
+          else
+            git push --set-upstream origin release/$CURRENT_BRANCH_NAME
+          fi
+
+          echo $CURRENT_BRANCH_NAME
+          echo "CURRENT_BRANCH_NAME=release/$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
+          echo "Current Branch is: $CURRENT_BRANCH_NAME"
+        working-directory: ${{ github.workspace }}/application
+
+      - name: Create Pull Request
+        id: cpr-check
+        run: |
+          PR_EXISTS=$(gh pr list --state open --head $CURRENT_BRANCH_NAME --json id --limit 1 | jq '.[] | .id' | tr -d '"')
+          if [ -n "$PR_EXISTS" ]; then
+            echo "PR already exists with the same branch. Skipping creation."
+          else
+            echo "No PR exists with the same branch. Creating a new one."
+            gh pr create --title "Bump version to $LATEST_VERSION" --body "Updating the release version to $LATEST_VERSION" --base main --head $CURRENT_BRANCH_NAME
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
