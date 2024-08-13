@@ -1,0 +1,57 @@
+name: Daily Translation Update
+
+# on:
+#   schedule:
+#     - cron: '0 0 * * *'
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DOPPLER_TOKEN_WEB: ${{ secrets.DOPPLER_TOKEN_COLLECTIBLES_WEB_DEV }}
+
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+  actions: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  download-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dopplerhq/cli-action@v3
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      # - name: Set up Simplelocalize CLI
+      #   run: |
+      #     curl -s https://get.simplelocalize.io/2.5/install | bash
+
+      - name: Set up environment
+        run: |
+          touch .env.local
+          ./scripts/config-development-environment.sh
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update translations
+          branch: translation-updates
+          title: 'Daily Translation Update'
+          body: 'This PR updates the translation files.'
+          add-paths: |
+            src/shared/lib/localization/locales/*
+
+      - uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
