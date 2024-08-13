@@ -65,8 +65,7 @@ jobs:
             else
               git push --set-upstream origin $CURRENT_BRANCH_NAME
             fi  
-            
-
+           
       - name: Create Pull Request
         id: cpr-check
         run: |
