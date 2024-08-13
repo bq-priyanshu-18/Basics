@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - master
-# on:
-#   pull_request:
-#     branches:
-#       - main
 
 env:
   CURRENT_BRANCH: ${{ github.ref }}
@@ -70,7 +66,6 @@ jobs:
           git branch        
 
       - name: Commit and push changes
-        if: env.needs_update == 'true'
         run: |
           git config --global user.name 'bq-priyanshu-18'
           git config --global user.email 'priyanshu.namdev@betaque.com'
@@ -89,8 +84,6 @@ jobs:
           echo "CURRENT_BRANCH_NAME=release/$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
           echo "Current Branch: $CURRENT_BRANCH_NAME"
           echo "My Branch: $MY_BRANCH"
-      - name: Set CURRENT_BRANCH_NAME
-        run: echo "CURRENT_BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
 
       - name: Create Pull Request
         id: cpr-check
