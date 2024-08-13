@@ -37,6 +37,7 @@ jobs:
 
       - name: Set up environment
         run: |
+          chmod +x ./scripts/config-development-environment.sh
           touch .env.local
           ./scripts/config-development-environment.sh
 
