@@ -41,31 +41,32 @@ jobs:
 
       - name: Create temporary branch
         run: |
-          CURRENT_BRANCH_NAME=test-2
+          CURRENT_BRANCH_NAME=$(git describe --tags `git rev-list --tags --max-count=1`)
           echo "CURRENT_BRANCH_NAME=$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
           echo "Current branch is: $CURRENT_BRANCH_NAME"
           git branch
           git checkout -b release/$CURRENT_BRANCH_NAME
           git branch
-          - name: Commit and push changes
-          run: |
-            git config --global user.name 'bq-priyanshu-18'
-            git config --global user.email 'priyanshu.namdev@betaque.com'
-  
-            if git diff --quiet; then
-              echo "No changes detected. Skipping commit."
-              exit 0
-            fi
-  
-            git add package.json
-            git commit -m "Bump version to $LATEST_VERSION"
-  
-            if [ $(git ls-remote --heads origin $CURRENT_BRANCH_NAME | wc -l) -eq 1 ]; then
-              echo "Branch $CURRENT_BRANCH_NAME already exists. Skipping push."
-            else
-              git push --set-upstream origin $CURRENT_BRANCH_NAME
-            fi  
-           
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'bq-priyanshu-18'
+          git config --global user.email 'priyanshu.namdev@betaque.com'
+
+          if git diff --quiet; then
+            echo "No changes detected. Skipping commit."
+            exit 0
+          fi
+
+          git add package.json
+          git commit -m "Bump version to $LATEST_VERSION"
+
+          if [ $(git ls-remote --heads origin $CURRENT_BRANCH_NAME | wc -l) -eq 1 ]; then
+            echo "Branch $CURRENT_BRANCH_NAME already exists. Skipping push."
+          else
+            git push --set-upstream origin $CURRENT_BRANCH_NAME
+          fi
+         
       - name: Create Pull Request
         id: cpr-check
         run: |
