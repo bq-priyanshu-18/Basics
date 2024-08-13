@@ -44,7 +44,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
           commit-message: Update translations
           branch: translation-updates
           title: 'Daily Translation Update'
