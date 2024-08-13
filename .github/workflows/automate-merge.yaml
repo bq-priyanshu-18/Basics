@@ -3,13 +3,13 @@ name: backend_deploy
 on:
   push:
     branches:
-      - 'feat/automate-pr-marge'
+      - 'main'
     tags:
       - '*'
 
   pull_request:
     branches:
-      - 'feat/automate-pr-marge'
+      - 'main'
 
   workflow_dispatch:
 
