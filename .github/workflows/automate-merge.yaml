@@ -41,7 +41,7 @@ jobs:
 
       - name: Create temporary branch
         run: |
-          CURRENT_BRANCH_NAME=test-1
+          CURRENT_BRANCH_NAME=test-2
           echo "CURRENT_BRANCH_NAME=$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
           echo "Current branch is: $CURRENT_BRANCH_NAME"
           git branch
