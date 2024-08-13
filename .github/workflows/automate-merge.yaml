@@ -39,13 +39,13 @@ jobs:
           echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
           echo $LATEST_VERSION
 
-      - name: Create temporary branch
+      - name: Create and switch to a new branch
         run: |
-          CURRENT_TAG_NAME=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "CURRENT_TAG_NAME=$CURRENT_TAG_NAME" >> $GITHUB_ENV
-          echo "Current tag is: $CURRENT_TAG_NAME"
-          git branch
-          git checkout -b release/$CURRENT_TAG_NAME
+          TAG_NAME=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          echo "Current tag is: $TAG_NAME"
+          BRANCH_NAME="release/${TAG_NAME}"
+          git checkout -b $BRANCH_NAME
           git branch
 
       - name: Commit and push changes
@@ -61,21 +61,18 @@ jobs:
           git add package.json
           git commit -m "Bump version to $LATEST_VERSION"
 
-          if [ $(git ls-remote --heads origin release/$CURRENT_TAG_NAME | wc -l) -eq 1 ]; then
-            echo "Branch release/$CURRENT_TAG_NAME already exists. Skipping push."
-          else
-            git push --set-upstream origin release/$CURRENT_TAG_NAME
-          fi
+          git push --set-upstream origin $BRANCH_NAME
 
       - name: Create Pull Request
         id: cpr-check
         run: |
-          PR_EXISTS=$(gh pr list --state open --head release/$CURRENT_TAG_NAME --json id --limit 1 | jq '.[] | .id' | tr -d '"')
+          BRANCH_NAME="release/${TAG_NAME}"
+          PR_EXISTS=$(gh pr list --state open --head $BRANCH_NAME --json id --limit 1 | jq '.[] | .id' | tr -d '"')
           if [ -n "$PR_EXISTS" ]; then
             echo "PR already exists with the same branch. Skipping creation."
           else
             echo "No PR exists with the same branch. Creating a new one."
-            gh pr create --title "Bump version to $LATEST_VERSION" --body "Updating the release version to $LATEST_VERSION" --base main --head release/$CURRENT_TAG_NAME
+            gh pr create --title "Bump version to $LATEST_VERSION" --body "Updating the release version to $LATEST_VERSION" --base main --head $BRANCH_NAME
           fi
         env:
           GH_TOKEN: ${{ github.token }}
