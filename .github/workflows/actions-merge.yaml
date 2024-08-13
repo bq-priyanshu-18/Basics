@@ -52,7 +52,7 @@ jobs:
           add-paths: |
             src/shared/lib/localization/locales/*
 
-      - uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          pull-request-number: ${{ github.event.pull_request.number }}
-          merge-method: squash
+      # - uses: peter-evans/enable-pull-request-automerge@v3
+      #   with:
+      #     pull-request-number: ${{ github.event.pull_request.number }}
+      #     merge-method: squash
