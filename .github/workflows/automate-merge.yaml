@@ -65,7 +65,6 @@ jobs:
           echo $CURRENT_BRANCH_NAME
           echo "CURRENT_BRANCH_NAME=release/$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
           echo "Current Branch is: $CURRENT_BRANCH_NAME"
-        working-directory: ${{ github.workspace }}/application
 
       - name: Create Pull Request
         id: cpr-check
