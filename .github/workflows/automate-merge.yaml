@@ -5,7 +5,7 @@ on:
     branches:
       - 'feat/automate-pr-marge'
     tags:
-      - 'feat/automate-pr-marge'
+      - '*'
 
   pull_request:
     branches:
