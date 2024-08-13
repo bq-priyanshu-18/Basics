@@ -50,11 +50,9 @@ jobs:
         working-directory: ${{ github.workspace }}/application
 
       - name: Update package.json version
-        if: env.needs_update == 'true'
         run: |
           npm version $LATEST_VERSION
         working-directory: ${{ github.workspace }}/application
-
 
       - name: Create temporary branch
         run: |
@@ -84,6 +82,7 @@ jobs:
           echo "CURRENT_BRANCH_NAME=release/$CURRENT_BRANCH_NAME" >> $GITHUB_ENV
           echo "Current Branch: $CURRENT_BRANCH_NAME"
           echo "My Branch: $MY_BRANCH"
+        working-directory: ${{ github.workspace }}/application
 
       - name: Create Pull Request
         id: cpr-check
