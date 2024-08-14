@@ -69,3 +69,5 @@ jobs:
         if: success()
         run: |
           gh pr merge -R "${{ github.repository }}" --squash --auto "${{ steps.create_pr.outputs.pull-request-url }}"
+        env:
+         GITHUB_TOKEN: ${{ github.token }}
