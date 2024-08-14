@@ -42,6 +42,7 @@ jobs:
           ./scripts/config-development-environment.sh
 
       - name: Create Pull Request
+        id: create_pr
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ github.token }}
