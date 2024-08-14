@@ -65,9 +65,21 @@ jobs:
       #     pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
       #     merge-method: squash
 
-      - name: Merge the Pull Request
-        if: success()
-        run: |
-          gh pr merge -R "${{ github.repository }}" --squash --auto "${{ steps.create_pr.outputs.pull-request-url }}"
-        env:
-         GITHUB_TOKEN: ${{ github.token }}
+      # - name: Merge the Pull Request
+      #   if: success()
+      #   run: |
+      #     gh pr merge -R "${{ github.repository }}" --merge  --auto "${{ steps.create_pr.outputs.pull-request-url }}"
+      #   env:
+      #    GITHUB_TOKEN: ${{ github.token }}
+
+      # - name: Merge Pull Request
+      #   run: |
+      #     PR_NUMBER=$(gh pr list --state open --head $CURRENT_BRANCH_NAME --json number --limit 1 | jq '.[] | .number')
+      #     if [ -n "$PR_NUMBER" ]; then
+      #       gh pr merge $PR_NUMBER --merge --auto --delete-branch
+      #       echo "PR #$PR_NUMBER merged and branch deleted."
+      #     else
+      #       echo "No PR found to merge."
+      #     fi
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}         
