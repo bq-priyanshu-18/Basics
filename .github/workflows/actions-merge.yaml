@@ -7,7 +7,7 @@ name: Daily Translation Update
 on:
   push:
     branches:
-      - master
+      - masters
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

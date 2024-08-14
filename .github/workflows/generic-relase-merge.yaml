@@ -1,0 +1,29 @@
+name: Call Trunkbased - Main Branch Workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  invoke-trunkbased-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Reusable Workflow
+        # uses: <owner>/<original-repo>/.github/workflows/trunkbased-main-branch.yml@main
+        uses: bq-priyanshu-18/release-please-auto-merge/actions/.github/workflows/generic.yml@main
+        with:
+          release_type: 'node'
+
+      - name: Merge Pull Request
+        if: steps.invoke-trunkbased-workflow.outputs.release_prs_created == 'true'
+        run: |
+          PR_NUMBER=$(gh pr list --state open --head release-please--branches--main--components--backend --json number --limit 1 | jq '.[] | .number')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr merge $PR_NUMBER --merge --auto --delete-branch
+            echo "PR #$PR_NUMBER merged and branch deleted."
+          else
+            echo "No PR found to merge."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
