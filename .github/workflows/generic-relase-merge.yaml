@@ -18,7 +18,7 @@ jobs:
     steps:
      - name: Debug Output
        run: |
-        echo "release_prs_created: ${{ needs.invoke-generic-workflow.outputs.release_prs_created }}"
+        echo "release_prs_created: ${{ needs.invoke-generic-workflow.outputs['release-version'].release_prs_created }}"
 
      - name: Merge Pull Request
        run: |
