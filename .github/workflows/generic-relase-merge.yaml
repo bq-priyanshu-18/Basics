@@ -15,10 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: invoke-generic-workflow
     # if: needs.invoke-generic-workflow.outputs.release_prs_created == 'true'
+    if: needs.invoke-generic-workflow.release-version.outputs.release_prs_created == 'true'
     steps:
-     - name: Debug Output
-       run: |
-        echo "release_prs_created: ${{ needs.invoke-generic-workflow.outputs['release-version'].release_prs_created }}"
+     # - name: Debug Output
+     #   run: |
+     #    echo "release_prs_created: ${{ needs.invoke-generic-workflow.outputs['release-version'].release_prs_created }}"
 
      - name: Merge Pull Request
        run: |
