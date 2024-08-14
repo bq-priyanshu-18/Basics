@@ -3,7 +3,7 @@ name: Call Generic Workflow
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   invoke-generic-workflow:
