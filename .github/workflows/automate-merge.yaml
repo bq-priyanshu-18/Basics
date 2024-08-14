@@ -3,7 +3,7 @@ name: Update Version
 on:
   push:
     branches:
-      - master
+      - masters
 
 env:
   CURRENT_BRANCH: ${{ github.ref }}
