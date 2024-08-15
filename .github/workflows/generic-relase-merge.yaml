@@ -10,23 +10,21 @@ jobs:
     uses: bq-priyanshu-18/release-please-auto-merge/.github/workflows/generic.yml@main
     with:
       release_type: 'node'
-    outputs:
-      release-op: ${{ steps.release-version.outputs.release_prs_created }}
-    secrets: inherit  # If your reusable workflow needs secrets, you can inherit them like this.
+    secrets: inherit  # Inherit secrets if needed
 
   merge-pull-request:
     runs-on: ubuntu-latest
     needs: invoke-generic-workflow
-    if: needs.invoke-generic-workflow.outputs.release-op == 'true'
+    if: needs.invoke-generic-workflow.outputs.release_prs_created == 'true'
     steps:
-     - name: Merge Pull Request
-       run: |
-         PR_NUMBER=$(gh pr list --state open --head release-please--branches--main--components--backend --json number --limit 1 | jq '.[] | .number')
-         if [ -n "$PR_NUMBER" ]; then
-           gh pr merge $PR_NUMBER --merge --auto --delete-branch
-           echo "PR #$PR_NUMBER merged and branch deleted."
-         else
-           echo "No PR found to merge."
-         fi
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge Pull Request
+        run: |
+          PR_NUMBER=$(gh pr list --state open --head release-please--branches--main--components--backend --json number --limit 1 | jq '.[] | .number')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr merge $PR_NUMBER --merge --auto --delete-branch
+            echo "PR #$PR_NUMBER merged and branch deleted."
+          else
+            echo "No PR found to merge."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
