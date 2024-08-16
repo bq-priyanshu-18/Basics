@@ -55,4 +55,4 @@ jobs:
             echo "No PR found to merge."
           fi
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
