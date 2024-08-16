@@ -6,9 +6,12 @@ on:
       - master
 
 permissions:
-  actions: write
+  id-token: write
   contents: write
+  security-events: write
+  actions: write
   pull-requests: write
+  packages: write
   
 jobs:
   invoke-generic-workflow:
