@@ -30,12 +30,7 @@ jobs:
   #        echo "Release check ::::"
 
   merge-pull-request:
-    runs-on: ubuntu-latest
-    # permissions:
-    #   actions: write
-    #   contents: write
-    #   pull-requests: write
-      
+    runs-on: ubuntu-latest    
     needs: invoke-generic-workflow
     if: ${{ needs.invoke-generic-workflow.outputs.release_prs_created }} == 'true'
     steps:
@@ -61,4 +56,4 @@ jobs:
             echo "No PR found to merge."
           fi
         env:
-          GITHUB_TOKEN: ${{ github.token }}          
+          GITHUB_TOKEN: ${{ github.token }}
