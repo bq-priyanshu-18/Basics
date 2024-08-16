@@ -12,6 +12,7 @@ permissions:
   actions: write
   pull-requests: write
   packages: write
+  workflows: write
 
 jobs:
   # invoke-generic-workflow:
