@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.253.0-rc3](https://github.com/bq-priyanshu-18/Basics/compare/v1.252.0-rc3...v1.253.0-rc3) (2024-08-16)
+
+
+### Features
+
+* automate merge release ([2e6ecbf](https://github.com/bq-priyanshu-18/Basics/commit/2e6ecbf5c6ce8edb6aec4e434f188f6ee2abb81f))
+* automate merge release ([2324a00](https://github.com/bq-priyanshu-18/Basics/commit/2324a00b5bb969666553d10a5d040d8593b78424))
+* automate merge release ([454256c](https://github.com/bq-priyanshu-18/Basics/commit/454256cb9cbdb072d9224e280390a12cfbac8c51))
+* automate merge release ([b824164](https://github.com/bq-priyanshu-18/Basics/commit/b824164a98f456563d874b99fa51a4d99d0f92bb))
+* automate merge release ([465d403](https://github.com/bq-priyanshu-18/Basics/commit/465d4030763c41f432adeb029840fc6cde96a65a))
+* automate merge release ([1034829](https://github.com/bq-priyanshu-18/Basics/commit/103482934c9d0b2173ee57523ba04bb0b1fa0a72))
+* automate merge release ([fdca9c2](https://github.com/bq-priyanshu-18/Basics/commit/fdca9c2d140cc0e8b42314c9a6d9333a895223a9))
+* automate merge release ([842d1f1](https://github.com/bq-priyanshu-18/Basics/commit/842d1f12189029679a67f539069804442a9ecaac))
+* automate merge release ([655feb2](https://github.com/bq-priyanshu-18/Basics/commit/655feb24ed7340b10b161cc7a9eb5a1e3a24c99f))
+* automate merge release ([73d3821](https://github.com/bq-priyanshu-18/Basics/commit/73d382175cd778b279ab514474d4448626dbaa74))
+* automate merge release ([9e5c147](https://github.com/bq-priyanshu-18/Basics/commit/9e5c147a5f1cb024c6458fb8995a23a4e91db12b))
+* automate merge release ([9fee43e](https://github.com/bq-priyanshu-18/Basics/commit/9fee43e64e8f419d2b25eab123b12fcac86facf2))
+* automate merge release ([b8df80c](https://github.com/bq-priyanshu-18/Basics/commit/b8df80c9dad5705648c872e1da2b6a4bffe8bb54))
+* automate merge release ([a6d8b50](https://github.com/bq-priyanshu-18/Basics/commit/a6d8b5076ed1c749469b1f552ba29032f2814c02))
+* automate merge release ([8341c67](https://github.com/bq-priyanshu-18/Basics/commit/8341c672607d3952cdf2c6acaf2a8189935aecf5))
+* automate merge release ([01b11f3](https://github.com/bq-priyanshu-18/Basics/commit/01b11f330d099e336158db52d8d910f38da7cec4))
+
 ## [1.254.0-rc3](https://github.com/bq-priyanshu-18/Basics/compare/v1.253.0-rc3...v1.254.0-rc3) (2024-08-16)
 
 
