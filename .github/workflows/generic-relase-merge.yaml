@@ -32,6 +32,7 @@ jobs:
           HEAD_BRANCH_NAME=$(echo '${{ needs.invoke-generic-workflow.outputs.release_prs }}' | jq -r '.[0].headBranchName')
           echo "HEAD_BRANCH_NAME=$HEAD_BRANCH_NAME" >> $GITHUB_ENV
           echo "steps name :: $HEAD_BRANCH_NAME"
+          echo "${{ needs.invoke-generic-workflow.outputs.release_prs }}"
 
       - name: Merge Pull Request
         run: |
