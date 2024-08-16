@@ -26,6 +26,9 @@ jobs:
     # needs: invoke-generic-workflow
     # if: ${{ needs.invoke-generic-workflow.outputs.release_prs_created }} == 'true'
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
       # - name: Extract headBranchName
       #   id: extract_branch_name
       #   run: |
