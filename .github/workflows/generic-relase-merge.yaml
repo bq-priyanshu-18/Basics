@@ -28,10 +28,10 @@ jobs:
 
   merge-pull-request:
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: write
-      pull-requests: write
+    # permissions:
+    #   actions: write
+    #   contents: write
+    #   pull-requests: write
       
     needs: invoke-generic-workflow
     if: ${{ needs.invoke-generic-workflow.outputs.release_prs_created }} == 'true'
