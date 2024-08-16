@@ -6,12 +6,9 @@ on:
       - master
 
 permissions:
-  id-token: write
-  contents: write
-  security-events: write
   actions: write
+  contents: write
   pull-requests: write
-  packages: write
   
 jobs:
   # invoke-generic-workflow:
@@ -45,6 +42,7 @@ jobs:
       #     echo "steps name :: $HEAD_BRANCH_NAME"
       #     # echo "test : ${{ needs.invoke-generic-workflow.outputs.release_prs }}"
       #     # echo "release pr  : ${{ needs.invoke-generic-workflow.outputs.release_prs_created }}"
+
       - name: Merge Pull Request
         run: |
           PR_NUMBER=$(gh pr list --state open --head release-please--branches--master--components--backend --json number --limit 1 | jq '.[] | .number')
@@ -55,4 +53,4 @@ jobs:
             echo "No PR found to merge."
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}          
