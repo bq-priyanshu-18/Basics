@@ -45,7 +45,6 @@ jobs:
       #     echo "steps name :: $HEAD_BRANCH_NAME"
       #     # echo "test : ${{ needs.invoke-generic-workflow.outputs.release_prs }}"
       #     # echo "release pr  : ${{ needs.invoke-generic-workflow.outputs.release_prs_created }}"
-
       - name: Merge Pull Request
         run: |
           PR_NUMBER=$(gh pr list --state open --head release-please--branches--master--components--backend --json number --limit 1 | jq '.[] | .number')
