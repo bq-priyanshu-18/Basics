@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.251.0-rc3](https://github.com/bq-priyanshu-18/Basics/compare/v1.250.0-rc3...v1.251.0-rc3) (2024-08-16)
+
+
+### Features
+
+* automate merge release ([8a26d3a](https://github.com/bq-priyanshu-18/Basics/commit/8a26d3ada27c6a5cc712b9d8fd54d598cb568db9))
+
 ## [1.250.0-rc3](https://github.com/bq-priyanshu-18/Basics/compare/v1.249.0-rc3...v1.250.0-rc3) (2024-08-16)
 
 
