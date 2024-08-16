@@ -35,14 +35,14 @@ jobs:
           # echo "test : ${{ needs.invoke-generic-workflow.outputs.release_prs }}"
           # echo "release pr  : ${{ needs.invoke-generic-workflow.outputs.release_prs_created }}"
 
-      - name: Merge Pull Request
-        run: |
-          PR_NUMBER=$(gh pr list --state open --head $HEAD_BRANCH_NAME --json number --limit 1 | jq '.[] | .number')
-          if [ -n "$PR_NUMBER" ]; then
-            gh pr merge $PR_NUMBER --merge --auto --delete-branch
-            echo "PR #$PR_NUMBER merged and branch deleted."
-          else
-            echo "No PR found to merge."
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Merge Pull Request
+      #   run: |
+      #     PR_NUMBER=$(gh pr list --state open --head $HEAD_BRANCH_NAME --json number --limit 1 | jq '.[] | .number')
+      #     if [ -n "$PR_NUMBER" ]; then
+      #       gh pr merge $PR_NUMBER --merge --auto --delete-branch
+      #       echo "PR #$PR_NUMBER merged and branch deleted."
+      #     else
+      #       echo "No PR found to merge."
+      #     fi
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
