@@ -20,15 +20,6 @@ jobs:
       release_type: 'node'
     secrets: inherit  # Inherit secrets if needed
 
-  # release-check:
-  #    runs-on: ubuntu-latest  
-  #    needs: invoke-generic-workflow 
-  #    if: ${{ needs.invoke-generic-workflow.outputs.release_prs_created }} == 'true'
-  #    steps:
-  #     - name: Release Check
-  #       run: |
-  #        echo "Release check ::::"
-
   merge-pull-request:
     runs-on: ubuntu-latest    
     needs: invoke-generic-workflow
@@ -37,14 +28,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # - name: Extract headBranchName
-      #   id: extract_branch_name
-      #   run: |
-      #     HEAD_BRANCH_NAME=$(echo '${{ needs.invoke-generic-workflow.outputs.release_prs }}' | jq -r '.[0].headBranchName')
-      #     echo "HEAD_BRANCH_NAME=$HEAD_BRANCH_NAME" >> $GITHUB_ENV
-      #     echo "steps name :: $HEAD_BRANCH_NAME"
-      #     # echo "test : ${{ needs.invoke-generic-workflow.outputs.release_prs }}"
-      #     # echo "release pr  : ${{ needs.invoke-generic-workflow.outputs.release_prs_created }}"
+      - name: Extract headBranchName
+        id: extract_branch_name
+        run: |
+          HEAD_BRANCH_NAME=$(echo '${{ needs.invoke-generic-workflow.outputs.release_prs }}' | jq -r '.[0].headBranchName')
+          echo "HEAD_BRANCH_NAME=$HEAD_BRANCH_NAME" >> $GITHUB_ENV
+          echo "steps name :: $HEAD_BRANCH_NAME"
+          # echo "test : ${{ needs.invoke-generic-workflow.outputs.release_prs }}"
+          # echo "release pr  : ${{ needs.invoke-generic-workflow.outputs.release_prs_created }}"
 
       - name: Merge Pull Request
         run: |
