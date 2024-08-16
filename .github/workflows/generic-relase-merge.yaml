@@ -26,9 +26,15 @@ jobs:
     needs: invoke-generic-workflow
     if: ${{ needs.invoke-generic-workflow.outputs.release_prs_created }} == 'true'
     steps:
+      - name: Extract headBranchName
+        id: extract_branch_name
+        run: |
+          HEAD_BRANCH_NAME=$(echo '${{ needs.invoke-generic-workflow.outputs.release_prs }}' | jq -r '.[0].headBranchName')
+          echo "HEAD_BRANCH_NAME=$HEAD_BRANCH_NAME" >> $GITHUB_ENV
+
       - name: Merge Pull Request
         run: |
-          PR_NUMBER=$(gh pr list --state open --head release-please--branches--main--components--backend --json number --limit 1 | jq '.[] | .number')
+          PR_NUMBER=$(gh pr list --state open --head "$HEAD_BRANCH_NAME" --json number --limit 1 | jq '.[] | .number')
           if [ -n "$PR_NUMBER" ]; then
             gh pr merge $PR_NUMBER --merge --auto --delete-branch
             echo "PR #$PR_NUMBER merged and branch deleted."
