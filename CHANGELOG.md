@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.250.0-rc3](https://github.com/bq-priyanshu-18/Basics/compare/v1.249.0-rc3...v1.250.0-rc3) (2024-08-16)
+
+
+### Features
+
+* automate merge release ([d21053f](https://github.com/bq-priyanshu-18/Basics/commit/d21053f0f9760202ae6f0fee9049425ca504155c))
+* automate merge release ([7e63992](https://github.com/bq-priyanshu-18/Basics/commit/7e639921273e8872eed97eedeb742caf7473589a))
+* automate merge release ([434ea34](https://github.com/bq-priyanshu-18/Basics/commit/434ea341f5e6c0e26d69681e2414032a0e5f6711))
+* automate merge release ([8a1a74e](https://github.com/bq-priyanshu-18/Basics/commit/8a1a74ef8b4ee8e8a0b52124da981ba5a24e0f82))
+* automate merge release ([a60addc](https://github.com/bq-priyanshu-18/Basics/commit/a60addc5f32b95cedba34308a17def8c674d087b))
+* automate merge release ([2133849](https://github.com/bq-priyanshu-18/Basics/commit/2133849b716aa640bfb1e99f648620c324c6a21e))
+
 ## [1.249.0-rc3](https://github.com/bq-priyanshu-18/Basics/compare/v1.248.0-rc3...v1.249.0-rc3) (2024-08-16)
 
 
