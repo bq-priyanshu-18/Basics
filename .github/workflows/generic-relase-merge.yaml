@@ -12,8 +12,7 @@ permissions:
   actions: write
   pull-requests: write
   packages: write
-  workflows: write
-
+  
 jobs:
   # invoke-generic-workflow:
   #   uses: bq-priyanshu-18/release-please-auto-merge/.github/workflows/generic.yml@main
